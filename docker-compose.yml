@@ -13,9 +13,8 @@ services:
       retries: 5
 
   backend:
-    build:
-      context: ./backend
-    image: analytics-backend
+    image: 295933006700.dkr.ecr.ap-south-1.amazonaws.com/analytics-backend:latest
+
     restart: unless-stopped
     env_file:
       - .env
@@ -30,9 +29,8 @@ services:
       - "3000:3000"
 
   frontend:
-    build:
-      context: ./frontend
-    image: analytics-frontend
+    image: 295933006700.dkr.ecr.ap-south-1.amazonaws.com/analytics-frontend:latest
+
     restart: unless-stopped
     depends_on:
       - backend
