@@ -15,7 +15,7 @@ A self-hosted product analytics platform. Track events from any app using a simp
 │  (React)    │   JWT         │                           BullMQ    │
 └─────────────┘               │                           Worker    │
                               │                              │      │
-                              │                           Neon DB   │
+                              │                           AWS RDS   │
                               └─────────────────────────────────────┘
 ```
 
@@ -27,7 +27,7 @@ Events are buffered in Redis and flushed to PostgreSQL every 30 seconds via a Bu
 |---|---|
 | Backend | Node.js, Express 5, TypeScript |
 | Frontend | React 19, Vite, Tailwind CSS, Recharts |
-| Database | PostgreSQL via Neon (serverless) |
+| Database | PostgreSQL via AWS RDS |
 | ORM | Prisma 7 with `@prisma/adapter-pg` |
 | Queue | BullMQ + Redis Stack |
 | Auth | JWT (dashboard users) + API key (event ingestion) |
@@ -168,12 +168,17 @@ fetch('https://your-backend.com/api/v1/track', {
 Create a `.env` file in the project root:
 
 ```env
-DATABASE_URL=postgresql://user:pass@host/db?sslmode=require
+# AWS RDS — format: postgresql://user:pass@<rds-endpoint>:5432/<dbname>?sslmode=require
+DATABASE_URL=postgresql://postgres:password@your-db.xxxx.ap-south-1.rds.amazonaws.com:5432/analytics?sslmode=require
+
 JWT_SECRET=your-secret-here
+
 AWS_ACCOUNT_ID=123456789012
 AWS_REGION=ap-south-1
 IMAGE_TAG=latest
 ```
+
+> **RDS note:** Make sure the RDS security group allows inbound traffic on port 5432 from your backend service. If running on EC2/ECS, allow the instance/task security group. If running locally, allow your IP.
 
 ## Running with Docker Compose
 
